@@ -63,7 +63,7 @@ if prompt := st.chat_input(disabled=not replicate_api):
 # Generate a new response if the last message is not from the assistant
 if st.session_state.messages[-1]["role"] != "assistant":
     # Retrieve PDF data (replace 'your_pdf_path.pdf' with the actual path)
-    pdf_data = read_pdf('merge (1).pdf')
+    pdf_data = read_pdf('merge.pdf')
 
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
