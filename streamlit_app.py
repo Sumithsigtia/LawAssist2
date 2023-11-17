@@ -1,7 +1,7 @@
 import streamlit as st
 import replicate
 import os
-import PyPDF2
+from PyPDF2 import PdfReader
 
 # App title
 st.set_page_config(page_title="🦙💬 Llama 2 Chatbot")
@@ -26,10 +26,10 @@ def read_pdf(file_path):
     pdf_data = ""
     try:
         with open(file_path, 'rb') as file:
-            pdf_reader = PyPDF2.PdfFileReader(file)
-            for page_num in range(pdf_reader.numPages):
-                page = pdf_reader.getPage(page_num)
-                pdf_data += page.extractText()
+            pdf_reader = PdfReader(file)
+            for page_num in range(len(pdf_reader.pages)):
+                page = pdf_reader.pages[page_num]
+                pdf_data += page.extract_text()
     except Exception as e:
         st.error(f"Error reading PDF: {e}")
     return pdf_data
