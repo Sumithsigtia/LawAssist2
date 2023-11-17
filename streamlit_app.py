@@ -1,7 +1,7 @@
 import streamlit as st
 import replicate
 import os
-import langchain  # Import Langchain
+import PyPDF2
 
 # App title
 st.set_page_config(page_title="🦙💬 Llama 2 Chatbot")
@@ -21,10 +21,18 @@ with st.sidebar:
     st.markdown('📖 Learn how to build this app in this [blog](https://blog.streamlit.io/how-to-build-a-llama-2-chatbot/)!')
 os.environ['REPLICATE_API_TOKEN'] = replicate_api
 
-# Function to read PDF data using Langchain
+# Function to read PDF data using PyPDF2
 def read_pdf(file_path):
-    with langchain.document(file_path) as doc:
-        return doc.get_text()
+    pdf_data = ""
+    try:
+        with open(file_path, 'rb') as file:
+            pdf_reader = PyPDF2.PdfFileReader(file)
+            for page_num in range(pdf_reader.numPages):
+                page = pdf_reader.getPage(page_num)
+                pdf_data += page.extractText()
+    except Exception as e:
+        st.error(f"Error reading PDF: {e}")
+    return pdf_data
 
 # Store LLM generated responses
 if "messages" not in st.session_state.keys():
