@@ -27,7 +27,7 @@ def read_pdf(file_path):
     try:
         with open(file_path, 'rb') as file:
             pdf_reader = PdfReader(file)
-            for page_num in range(len(pdf_reader.pages)):
+            for page_num in range(min(5, len(pdf_reader.pages))):  # Limiting to the first 5 pages for demonstration
                 page = pdf_reader.pages[page_num]
                 pdf_data += page.extract_text()
     except Exception as e:
@@ -70,12 +70,18 @@ if prompt := st.chat_input(disabled=not replicate_api):
 
 # Generate a new response if the last message is not from the assistant
 if st.session_state.messages[-1]["role"] != "assistant":
-    # Retrieve PDF data (replace 'your_pdf_path.pdf' with the actual path)
+    # Retrieve a limited amount of PDF data (replace 'your_pdf_path.pdf' with the actual path)
     pdf_data = read_pdf('merge.pdf')
+
+    # Limit the length of the input prompt and PDF data
+    max_prompt_length = 256
+    max_pdf_data_length = 1024
+    prompt_input = prompt[:max_prompt_length]
+    pdf_data = pdf_data[:max_pdf_data_length]
 
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            response = generate_llama2_response(prompt, pdf_data)
+            response = generate_llama2_response(prompt_input, pdf_data)
             placeholder = st.empty()
             full_response = ''
             for item in response:
