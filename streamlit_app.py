@@ -1,7 +1,7 @@
 import streamlit as st
 import replicate
 import os
-from PyPDF2 import PdfReader
+import langchain
 
 # App title
 st.set_page_config(page_title="🦙💬 Llama 2 Chatbot")
@@ -21,15 +21,12 @@ with st.sidebar:
     st.markdown('📖 Learn how to build this app in this [blog](https://blog.streamlit.io/how-to-build-a-llama-2-chatbot/)!')
 os.environ['REPLICATE_API_TOKEN'] = replicate_api
 
-# Function to read PDF data using PyPDF2
+# Function to read PDF data using Langchain
 def read_pdf(file_path):
     pdf_data = ""
     try:
-        with open(file_path, 'rb') as file:
-            pdf_reader = PdfReader(file)
-            for page_num in range(min(5, len(pdf_reader.pages))):  # Limiting to the first 5 pages for demonstration
-                page = pdf_reader.pages[page_num]
-                pdf_data += page.extract_text()
+        with langchain.document(file_path) as doc:
+            pdf_data = doc.get_text()
     except Exception as e:
         st.error(f"Error reading PDF: {e}")
     return pdf_data
@@ -55,8 +52,9 @@ def generate_llama2_response(prompt_input, pdf_data=""):
             string_dialogue += "User: " + dict_message["content"] + "\n\n"
         else:
             string_dialogue += "Assistant: " + dict_message["content"] + "\n\n"
-    # Include PDF data in the prompt
-    prompt = f"{string_dialogue} {prompt_input} Assistant: {pdf_data}"
+
+    # Include user's question and relevant information from the PDF in the prompt
+    prompt = f"{string_dialogue} User: {prompt_input}\n\nAssistant: {pdf_data}"
 
     output = replicate.run('a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5',
                            input={"prompt": prompt, "temperature": 0.1, "top_p": 0.9, "max_length": 512, "repetition_penalty": 1})
