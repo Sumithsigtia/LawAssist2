@@ -4,7 +4,8 @@ import os
 
 # App title
 st.set_page_config(page_title="Legal Assist Chatbot")
-
+st.title('Ask me legal questions, and I\'ll provide answers!\n'
+    'Created by: Vidhan Mehta, Sumith Sigtia, Shabiul Hasnain Siddiqui, Swathi')
 # Replicate Credentials
 with st.sidebar:
     st.title('Legal Assist Chatbot')
@@ -17,8 +18,7 @@ with st.sidebar:
             st.warning('Please enter your credentials!')
         else:
             st.success('Proceed to entering your prompt message!')
-        st.markdown('Ask me legal questions, and I\'ll provide answers!\n'
-                    'Created by: Vidhan Mehta, Sumith Sigtia, Shabiul Hasnain Siddiqui, Swathi')
+        
 os.environ['REPLICATE_API_TOKEN'] = replicate_api
 
 # Store LLM generated responses
