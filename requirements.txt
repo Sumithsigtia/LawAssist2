@@ -1,16 +1,2 @@
 replicate
-langchain==0.0.316
-openai==0.28.1
-pypdf
-pandas
-matplotlib
-tiktoken
-textract
-transformers
-faiss-cpu
 streamlit
-streamlit-extras
-PyPDF2==3.0.1
-python-dotenv==1.0.0
-s3fs
-git+https://github.com/streamlit/files-connection
