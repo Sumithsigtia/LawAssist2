@@ -17,7 +17,8 @@ with st.sidebar:
             st.warning('Please enter your credentials!')
         else:
             st.success('Proceed to entering your prompt message!')
-   
+        st.markdown('Ask me legal questions, and I'll provide answers!
+        Created by: Vidhan Mehta, Sumith Sigtia, Shabiul Hasnain Siddiqui, Swathi')
 os.environ['REPLICATE_API_TOKEN'] = replicate_api
 
 # Store LLM generated responses
