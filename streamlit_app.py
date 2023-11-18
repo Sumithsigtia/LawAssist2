@@ -4,7 +4,7 @@ import os
 
 # App title
 st.set_page_config(page_title="Legal Assist Chatbot")
-st.write('Ask me legal questions, and I\'ll provide answers!\n'
+st.title('Ask me legal questions, and I\'ll provide answers!\n'
     'Created by: Vidhan Mehta, Sumith Sigtia, Shabiul Hasnain Siddiqui, Swathi')
 # Replicate Credentials
 with st.sidebar:
