@@ -49,13 +49,16 @@ def generate_llama2_response(prompt_input):
         internal_prompt = "Assistant: I am acting as a legal assistant specializing in Indian law. Please provide details about your legal query or concern."
         input_prompt = f"{string_dialogue} {internal_prompt} {prompt_input} Assistant: "
         st.write(f"Input prompt: {input_prompt}")
-        
-        output = replicate.run('a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5',
-                               input={"prompt": input_prompt,
-                                      "temperature": 0.1, "top_p": 0.9, "max_length": 512, "repetition_penalty": 1})
-        st.write(f"Output from Replicate: {output}")
-        
-        return output
+
+        # Iterate through the generator to get the actual text
+        output_generator = replicate.run('a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5',
+                                         input={"prompt": input_prompt,
+                                                "temperature": 0.1, "top_p": 0.9, "max_length": 512, "repetition_penalty": 1})
+        output_list = list(output_generator)
+        full_response = ''.join(output_list)
+        st.write(f"Output from Replicate: {full_response}")
+
+        return output_list
 
     except Exception as e:
         st.error(f"An error occurred: {e}")
