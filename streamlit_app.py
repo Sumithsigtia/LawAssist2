@@ -5,7 +5,8 @@ import os
 # App title
 st.set_page_config(page_title="Legal Assist Chatbot")
 st.title('Ask me legal questions, and I\'ll provide answers!\n'
-    'Created by: Vidhan Mehta, Sumith Sigtia, Shabiul Hasnain Siddiqui, Swathi')
+         'Created by: Vidhan Mehta, Sumith Sigtia, Shabiul Hasnain Siddiqui, Swathi')
+
 # Replicate Credentials
 with st.sidebar:
     st.title('Legal Assist Chatbot')
@@ -18,7 +19,7 @@ with st.sidebar:
             st.warning('Please enter your credentials!')
         else:
             st.success('Proceed to entering your prompt message!')
-        
+
 os.environ['REPLICATE_API_TOKEN'] = replicate_api
 
 # Store LLM generated responses
@@ -32,22 +33,33 @@ for message in st.session_state.messages:
 
 def clear_chat_history():
     st.session_state.messages = [{"role": "assistant", "content": "How may I assist you with Indian legal matters today?"}]
+
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
 # Function for generating LLaMA2 response
 # Refactored from https://github.com/a16z-infra/llama2-chatbot
 def generate_llama2_response(prompt_input):
-    string_dialogue = "You are a legal assistant specializing in Indian law. You only respond once as 'Assistant'."
-    for dict_message in st.session_state.messages:
-        if dict_message["role"] == "user":
-            string_dialogue += f"User: {dict_message['content']}\n\n"
-        else:
-            string_dialogue += f"Assistant: {dict_message['content']}\n\n"
-    internal_prompt = "Assistant: I am acting as a legal assistant specializing in Indian law. Please provide details about your legal query or concern."
-    output = replicate.run('a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5', 
-                           input={"prompt": f"{string_dialogue} {internal_prompt} {prompt_input} Assistant: ",
-                                  "temperature": 0.1, "top_p": 0.9, "max_length": 512, "repetition_penalty": 1})
-    return output
+    try:
+        string_dialogue = "You are a legal assistant specializing in Indian law. You only respond once as 'Assistant'."
+        for dict_message in st.session_state.messages:
+            if dict_message["role"] == "user":
+                string_dialogue += f"User: {dict_message['content']}\n\n"
+            else:
+                string_dialogue += f"Assistant: {dict_message['content']}\n\n"
+        internal_prompt = "Assistant: I am acting as a legal assistant specializing in Indian law. Please provide details about your legal query or concern."
+        input_prompt = f"{string_dialogue} {internal_prompt} {prompt_input} Assistant: "
+        st.write(f"Input prompt: {input_prompt}")
+        
+        output = replicate.run('a16z-infra/llama13b-v2-chat:df7690f1994d94e96ad9d568eac121aecf50684a0b0963b25a41cc40061269e5',
+                               input={"prompt": input_prompt,
+                                      "temperature": 0.1, "top_p": 0.9, "max_length": 512, "repetition_penalty": 1})
+        st.write(f"Output from Replicate: {output}")
+        
+        return output
+
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+        return []
 
 # User-provided prompt
 if prompt := st.chat_input(disabled=not replicate_api, placeholder="Please describe your Indian legal query or concern..."):
