@@ -18,7 +18,6 @@ with st.sidebar:
             st.warning('Please enter your credentials!', icon='⚠️')
         else:
             st.success('Proceed to entering your prompt message!', icon='👉')
-    st.markdown('📖 Learn how to build this app in this [blog](https://blog.streamlit.io/how-to-build-a-llama-2-chatbot/)!')
 os.environ['REPLICATE_API_TOKEN'] = replicate_api
 
 # Use Llama2-70B model
