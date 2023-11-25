@@ -46,7 +46,7 @@ def generate_llama2_response(prompt_input):
             string_dialogue += "Assistant: " + dict_message["content"] + "\n\n"
     output = replicate.run(llm, 
                            input={"prompt": f"{string_dialogue} {prompt_input} Assistant: ",
-                                  "temperature": 0.1, "top_p": 0.9, "max_length": 512, "repetition_penalty": 1})
+                                  "temperature": 0.1, "top_p": 0.9, "max_length": 128, "repetition_penalty": 1})
     return output
 
 # User-provided prompt
