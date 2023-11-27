@@ -33,7 +33,7 @@ for message in st.session_state.messages:
         st.write(message["content"])
 
 def clear_chat_history():
-    st.session_state.messages = [{"role": "assistant", "content": "You are a legal assistant chatbot specializing in Indian law. How may I assist you today?"}]
+    st.session_state.messages = [{"role": "assistant", "content": "I am a legal assistant chatbot specializing in Indian law. How may I assist you today?"}]
 st.sidebar.button('Clear Chat History', on_click=clear_chat_history)
 
 # Function for generating LLaMA2 response
@@ -57,7 +57,7 @@ if prompt := st.chat_input(disabled=not replicate_api):
 
 # Generate a new response if last message is not from assistant
 if st.session_state.messages[-1]["role"] != "assistant":
-    with st.chat_message("assistant"):
+    with st.chat_message("Bot"):
         with st.spinner("Thinking..."):
             response = generate_llama2_response(prompt)
             placeholder = st.empty()
